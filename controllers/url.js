@@ -14,3 +14,6 @@ await URL.create ({
 return res.json({id:shortId});
 
 }
+module.exports={
+    handleGenerateNewShortURL,
+}
