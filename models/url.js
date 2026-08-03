@@ -17,3 +17,6 @@ const urlSchema=new mongoose.Schema(
     },
     {timestamps :true}
 );
+
+const URl=mongoose.model("url",urlSchema);
+module.exports=URL;
