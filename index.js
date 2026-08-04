@@ -4,7 +4,7 @@ const urlRoute=require("./routes/url");
 const app=express();
 const URL=require('./models/url');
 const PORT =8000;
-const URL = require("./models/url");
+
 connectToMongoDB("mongodb://localhost:27017/short-url").then(
     console.log("Mongodb connected")
 );
