@@ -1,31 +1,42 @@
 const express = require("express");
-const {connectToMongoDB}=require("./connect");
-const urlRoute=require("./routes/url");
-const app=express();
-const URL=require('./models/url');
-const PORT =8000;
+const { connectToMongoDB } = require("./connect");
+const urlRoute = require("./routes/url");
+const URL = require("./models/url");
 
-connectToMongoDB("mongodb://localhost:27017/short-url").then(
-    console.log("Mongodb connected")
-);
+const app = express();
+const PORT = 8000;
 
-app.get('/:shortId',async (req,res)=>{
- const shortId=req.params.shortId;
- const entry= await URL.findOneAndUpdate(
-    {
-        shortId,
-    },
-    {
-       $push:{
-        visitHistory:{
-            timestamp:Date.now(),
-        },
-       } ,
-    }
- );
- res.redirect(entry.redirectURL);
-})
+connectToMongoDB("mongodb://localhost:27017/short-url")
+    .then(() => console.log("MongoDB Connected"))
+    .catch((err) => console.log(err));
 
 app.use(express.json());
-app.use("/url",urlRoute);
-app.listen(PORT,()=>console.log(`Server Started at PORT:${PORT}`));
+
+app.get("/test", (req, res) => {
+    return res.end("<h1>Hey from server</h1>");
+});
+
+app.get("/:shortId", async (req, res) => {
+    const shortId = req.params.shortId;
+
+    const entry = await URL.findOneAndUpdate(
+        { shortId },
+        {
+            $push: {
+                visitHistory: {
+                    timestamp: Date.now(),
+                },
+            },
+        }
+    );
+
+    if (!entry) {
+        return res.status(404).send("Short URL not found");
+    }
+
+    res.redirect(entry.redirectURL);
+});
+
+app.use("/url", urlRoute);
+
+app.listen(PORT, () => console.log(`Server Started at PORT:${PORT}`));
