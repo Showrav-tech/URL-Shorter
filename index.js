@@ -10,10 +10,24 @@ connectToMongoDB("mongodb://localhost:27017/short-url")
     .then(() => console.log("MongoDB Connected"))
     .catch((err) => console.log(err));
 
+app.set("view engine","ejs");
 app.use(express.json());
 
-app.get("/test", (req, res) => {
-    return res.end("<h1>Hey from server</h1>");
+app.get("/test", async (req, res) => {
+   const allUrls = await URL.find({});
+   return res.end(`
+    <html>
+    <head></head>
+    <body>
+    <ol>
+    ${allUrls.map(url=>`<li>${url.shortId}-${url.redirectURL}-${url.visitHistory.length}</li>`)
+.join("")}
+    </ol>
+    </body>
+    </html>
+    
+    
+    `)
 });
 
 app.get("/:shortId", async (req, res) => {
