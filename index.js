@@ -11,15 +11,14 @@ connectToMongoDB("mongodb://localhost:27017/short-url")
     .then(() => console.log("MongoDB Connected"))
     .catch((err) => console.log(err));
 
-app.set("view engine","ejs");
-
-app.set('views',path.resolve("./views"));
+app.set("view engine", "ejs");
+app.set('views', path.resolve("./views"));
 app.use(express.json());
 
 app.get("/test", async (req, res) => {
    const allUrls = await URL.find({});
-   return res.render("home",{
-    urls : allUrls,
+   return res.render("home", {
+    urls: allUrls || []
    });
 });
 
