@@ -18,19 +18,9 @@ app.use(express.json());
 
 app.get("/test", async (req, res) => {
    const allUrls = await URL.find({});
-   return res.end(`
-    <html>
-    <head></head>
-    <body>
-    <ol>
-    ${allUrls.map(url=>`<li>${url.shortId}-${url.redirectURL}-${url.visitHistory.length}</li>`)
-.join("")}
-    </ol>
-    </body>
-    </html>
-    
-    
-    `)
+   return res.render("home",{
+    urls : allUrls,
+   });
 });
 
 app.get("/:shortId", async (req, res) => {
