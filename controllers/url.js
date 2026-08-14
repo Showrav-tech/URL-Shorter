@@ -12,7 +12,7 @@ async function handleGenerateNewShortURL(req, res) {
 
     await URL.create({
         shortId,
-        redirectURL: body.url,
+        redirectURL: body.url.trim(),
         visitHistory: [],
     });
 
