@@ -1,7 +1,12 @@
 const express = require("express");
 const { connectToMongoDB } = require("./connect");
-const urlRoute = require("./routes/url");
+
 const URL = require("./models/url");
+const urlRoute = require("./routes/url");
+const staticRoute = require("./routes/staticRouter");
+const staticRoute=require('./routes/user');
+
+
 const path = require("path");
 
 const app = express();
@@ -45,5 +50,7 @@ app.get("/:shortId", async (req, res) => {
 });
 
 app.use("/url", urlRoute);
+app.use("/user",userRoute);
+app.use("/",staticRoute);
 
 app.listen(PORT, () => console.log(`Server Started at PORT:${PORT}`));
