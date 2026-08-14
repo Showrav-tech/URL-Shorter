@@ -4,8 +4,7 @@ const { connectToMongoDB } = require("./connect");
 const URL = require("./models/url");
 const urlRoute = require("./routes/url");
 const staticRoute = require("./routes/staticRouter");
-const staticRoute=require('./routes/user');
-
+const userRoute = require("./routes/user");
 
 const path = require("path");
 
@@ -17,16 +16,14 @@ connectToMongoDB("mongodb://localhost:27017/short-url")
     .catch((err) => console.log(err));
 
 app.set("view engine", "ejs");
-app.set('views', path.resolve("./views"));
-app.use(express.json());
-app.use(express.urlencoded({extended: false}));
+app.set("views", path.resolve("./views"));
 
-app.get("/test", async (req, res) => {
-   const allUrls = await URL.find({});
-   return res.render("home", {
-    urls: allUrls || []
-   });
-});
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+app.use("/", staticRoute);
+app.use("/url", urlRoute);
+app.use("/user", userRoute);
 
 app.get("/:shortId", async (req, res) => {
     const shortId = req.params.shortId;
@@ -46,11 +43,9 @@ app.get("/:shortId", async (req, res) => {
         return res.status(404).send("Short URL not found");
     }
 
-    res.redirect(entry.redirectURL);
+    return res.redirect(entry.redirectURL);
 });
 
-app.use("/url", urlRoute);
-app.use("/user",userRoute);
-app.use("/",staticRoute);
-
-app.listen(PORT, () => console.log(`Server Started at PORT:${PORT}`));
+app.listen(PORT, () => {
+    console.log(`Server Started at PORT:${PORT}`);
+});
